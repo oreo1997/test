@@ -1,0 +1,143 @@
+import random
+
+class player1:
+  
+  selfhp = 100
+  bkhp = 0
+  avoid = 0
+  
+  
+  
+  def hp():
+    return player1.selfhp
+    
+  
+  def action(dice1):
+    if(dice1==2 or dice1==4 or dice1==6):
+      print('プレイヤー1はプレイヤー2に'+str(player1.damage(dice1))+'ダメージを与えた')
+      player2.selfhp -= player1.damage(dice1)
+      
+    if(dice1==1):
+      print('プレイヤー1はHPを'+str(player1.cure(dice1))+'回復した')
+      player1.selfhp += player1.cure(dice1)
+      
+    if(dice1==5):
+      print('プレイヤー1の攻撃は外れた')
+      
+    if(dice1==3):
+      print('プレイヤー1は回避斬りでプレイヤー2に'+str(player1.damage(dice1))+'ダメージを与えた')
+      player1.bkhp = player1.selfhp
+      player2.selfhp -= player1.damage(dice1)
+      player1.avoid=1
+      
+
+  def damage(dice1):
+    if(dice1==2 or dice1==3):
+      return 10
+    if(dice1==4):
+      return 25
+    if(dice1==6):
+      return 30
+  
+  def cure(dice1):
+    if(dice1==1):
+      return 30
+      
+class player2:
+  
+  selfhp=100
+  charge=0
+  
+  
+  
+  def hp():
+    return player2.selfhp
+    
+  
+  def action(dice2):
+      
+    if(dice2==2 or dice2==4):
+      if(player2.charge==1):
+        player2.charge=0
+        player2.selfhp += player2.cure(dice2)
+        print('プレイヤー2はHPを'+str(player2.cure(dice2))+'回復した')
+      print('プレイヤー2はHPを'+str(player2.cure(dice2))+'回復した')
+      player2.selfhp += player2.cure(dice2)
+      
+    if(dice2==5 or dice2==6):
+      if(player2.charge==1):
+        player2.charge=0
+        player1.selfhp -= player2.damage(dice2)
+        print('プレイヤー2はプレイヤー1に炎魔法で'+str(player2.damage(dice2))+'ダメージを与えた')
+      print('プレイヤー2はプレイヤー1に炎魔法で'+str(player2.damage(dice2))+'ダメージを与えた')
+      player1.selfhp -= player2.damage(dice2)
+      
+    if(dice2==1 or dice2==3):
+      player2.charge = 1
+      print('プレイヤー2は集中している')
+    
+      
+
+  def damage(dice2):
+    if(dice2==5 or dice2==6):
+      return 30
+  
+  def cure(dice2):
+    if(dice2==2):
+      return 10
+    if(dice2==4):
+      return 20
+class battle_check:
+ 
+  def max_hp_check():
+
+    if(player1.selfhp>100):
+      player1.selfhp=100
+      
+    if(player2.selfhp>100):
+      player2.selfhp=100
+      
+  def win_check():
+
+    if(player2.selfhp>0 and player1.selfhp<=0):
+      print('\nプレイヤー1は倒れた')
+      print('プレイヤー2の勝利！')
+    if(player1.selfhp>0 and player2.selfhp<=0):
+      print('\nプレイヤー2は倒れた')
+      print('プレイヤー1の勝利！')
+    if(player1.selfhp<=0 and player2.selfhp<=0):
+      print('\n両プレイヤーは相打ちになった')
+      
+  def avoid_check():
+ 
+   if(player1.avoid == 1):
+      player1.avoid = 0
+      if(player1.selfhp < player1.bkhp):
+        player1.selfhp = player1.bkhp
+        print('…と思ったがプレイヤー1は攻撃を回避した')
+        
+player1.selfhp = 100
+player2.selfhp = 100
+turn = 0
+player1.avoid = 0
+player2.charge = 0
+
+turn += 1
+print('\n■ターン'+str(turn)+'■')
+
+dice1 = random.randint(1,6)
+dice2 = random.randint(1,6)
+print('\nプレイヤー1の出目は'+str(dice1)+',プレイヤー2の出目は'+str(dice2)+'\n')
+
+player1.action(dice1)
+player2.action(dice2)
+
+
+battle_check. max_hp_check()
+
+battle_check. avoid_check()
+
+print('\nプレイヤー1のHP'+str(player1.selfhp))
+print('プレイヤー2のHP'+str(player2.selfhp))
+
+battle_check.win_check()
